@@ -1,0 +1,32 @@
+- col:
+  - card:
+      id: card1
+      title: Card 1
+      content:
+        - gauge:
+            id: gauge1
+            data: buero.temperature.temperature
+            min: 0
+            max: 100
+            unit: '%'
+        - gauge:
+            id: gauge2
+            data: buero.temperature.humidity
+            min: 0
+            max: 100
+            unit: '%'
+        
+        - slider:
+            id: slider3
+            data: buero.light.brightness
+            min: 0
+            max: 100
+            unit: '%'
+
+  - mini-card:
+        id: mini-card4
+        title: Card 4
+        icon: MD::lightbulb
+        data: buero.light.state
+        payload_on: 'on'
+        payload_off: 'off'

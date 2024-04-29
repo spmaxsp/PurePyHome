@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="./material-symbols-main/material-symbols/index.css" rel="stylesheet">
+
+<link href='./css/index.css' rel='stylesheet'>
+<link href='./css/components/buttons.css' rel='stylesheet'>
+<link href='./css/components/gauge.css' rel='stylesheet'>
+<link href='./css/components/onoffswitch.css' rel='stylesheet'>
+<link href='./css/components/slider.css' rel='stylesheet'>
+
+<script src="./chart.min.js"></script>
+
+</head>
+<body>
+
+<h2>My Home</h2>
+
+<div class="row">
+    
+    <div class="column">
+        <h2>Card 1</h2>
+        <div class="card">
+          <canvas id="myChart" style="width:100%;"></canvas>
+        </div>
+    </div>
+  
+    <div class="column">
+        <h2>Card 2</h2> 
+        <div class="half-column">
+            <div class="card">
+                <h3>Spottify</h3>
+                <p class="b">on</p>
+                <div class="mini-card-bottom-container">
+                    <div class="onoffswitch">
+                        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch2" tabindex="0" checked >
+                        <label class="onoffswitch-label" for="myonoffswitch2"></label>                    
+                    </div>
+                    <img src="./assets/Spottify.png" alt="Spottify" style="width:40px;height:40px;" />
+                </div>
+            </div>
+        </div>
+
+        <div class="half-column">
+            <div class="card">
+                <h3>Spottify</h3>
+                <p class="b">on</p>
+                <div class="mini-card-bottom-container">
+                    <div class="onoffswitch">
+                        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch2" tabindex="0" checked >
+                        <label class="onoffswitch-label" for="myonoffswitch2"></label>                    
+                    </div>
+                    <span class="material-symbols-rounded" style="font-size: 40px; color: #b7bdf8;">lightbulb</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="column">
+        <h2>Card 3</h2>
+        <div class="card">
+          <div class="button-container">
+            <button class="button">Button</button>
+            <button class="button secondary">Button</button>
+          </div>
+          <div class="button-container">
+            <button class="button">Button</button>
+            <button class="button">Button</button>
+            <button class="button">Button</button>
+          </div>
+          <div class="button-container">
+            <button class="button outline">Button</button>
+          </div>
+          <div class="button-container">
+            <button class="button icon"><span class="material-symbols-rounded">skip_previous</span></button>
+            <button class="button icon"><span class="material-symbols-rounded">play_pause</span></button>
+            <button class="button icon"><span class="material-symbols-rounded">skip_next</span></button>
+          </div>
+          <div class="styled-slider">
+            <input class="invisible" type="range" min="0" max="100" value="50">
+          </div>
+        </div>
+    </div>
+    
+    <div class="column">
+        <h2>Card 4</h2>
+        <div class="card">
+            <ol class="cardelemets">
+                <li>
+
+                  <div class="gauge-container">
+                    <div class='gauge-track'></div>
+                    <div class='gauge-main-mask'>
+                      <div class='gauge-main'></div>
+                    </div>
+                    <div class="gauge-end"></div>
+                    <div class="gauge-start"></div>
+                  </div>
+                  
+                </li>
+                <li>
+                    <div class="flex-container">
+                        <div style="flex-grow: 1">#</div>
+                        <div style="flex-grow: 8">Text</div>
+                        <div style="flex-grow: 1">
+                        <div class="onoffswitch">
+                            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch2" tabindex="0" checked>
+                            <label class="onoffswitch-label" for="myonoffswitch2"></label>                    
+                        </div>
+                    </div> 
+                </div>
+                </li>
+                <li>
+                    <div class="flex-container">
+                        <div style="flex-grow: 1">#</div>
+                        <div style="flex-grow: 8">Text</div>
+                        <div style="flex-grow: 1">
+                          <div class="onoffswitch">
+                              <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" tabindex="0" checked>
+                              <label class="onoffswitch-label" for="myonoffswitch"></label>                    
+                          </div>
+                        </div> 
+                    </div>
+                </li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+</body>
+
+
+<script>
+  for (let e of document.querySelectorAll('.styled-slider')) {
+    if (e.firstElementChild.type == "range") {
+      console.log(e)
+      e.firstElementChild.addEventListener('input', () => e.style.setProperty('--value', e.firstElementChild.value));
+    }
+}
+</script>
+
+
+
+<script>
+  const chartOptions = {
+    type: "line",
+    options: {
+      legend: { display: false }
+    }
+  };
+
+  window.onload = function () {
+    const myChart = new Chart("myChart", chartOptions);
+
+    const eventSource = new EventSource('/stream');
+    eventSource.onmessage = function(event) {
+      //console.log(myChart);
+      const data = JSON.parse(event.data);
+      //console.log(data);
+      myChart.config.data = {
+        labels: data.xValues,
+        datasets: [{
+          data: data.dataset1,
+          borderColor: "#8aadf4",
+          fill: false
+        }, {
+          data: data.dataset2,
+          borderColor: "#b7bdf8",
+          fill: false
+        }]
+      };
+      console.log(myChart.data);
+      myChart.update('none');
+    };
+  };
+</script>
+
+</html>

@@ -1,0 +1,91 @@
+- col:
+  - card:
+      id: card1
+      title: Card 1
+      content:
+        - gauge:
+            id: gauge1
+            min: 0
+            max: 100
+            unit: '%'
+        - slider:
+            id: slider1
+            min: 0
+            max: 100
+            unit: '%'
+        - slider:
+            id: slider2
+            min: 0
+            max: 100
+            unit: '%'
+        - slider:
+            id: slider3
+            min: 0
+            max: 100
+            unit: '%'
+  - card:
+      id: card2
+      title: Card 2
+      content:
+        - button-container:
+            - button:
+                id: button5
+                text: Button 5
+            - button-secondary:
+                id: button6
+                text: Button 6
+            - button-outline:
+                id: button7
+                text: Button 7
+        - button-container:
+            - button-outline:
+                id: button7
+                text: Button 7
+  - mini-card:
+      id: mini-card3
+      title: Card 3
+      image: /assets/Spottify.png
+  - mini-card:
+      id: mini-card4
+      title: Card 4
+      icon: MD::lightbulb
+- col:
+  - card:
+      id: card1
+      title: Card 1
+      content:
+        - gauge:
+            id: gauge1
+            min: 0
+            max: 100
+            unit: '%'
+        - slider:
+            id: slider1
+            min: 0
+            max: 100
+            unit: '%'
+        - slider:
+            id: slider2
+            min: 0
+            max: 100
+            unit: '%'
+- col:
+  - card:
+      id: card1
+      title: Card 1
+      content:
+        - gauge:
+            id: gauge3
+            min: 0
+            max: 100
+            unit: '%'
+        - slider:
+            id: slider4
+            min: 0
+            max: 100
+            unit: '%'
+        - slider:
+            id: slider5
+            min: 0
+            max: 100
+            unit: '%'

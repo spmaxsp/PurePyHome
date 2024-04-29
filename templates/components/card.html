@@ -1,0 +1,14 @@
+<div class="card" id="{{ card['card'].id }}">
+    <h3> {{ card['card'].title }} </h3>
+    {% for element in card['card'].content %}
+        {% if element.keys()|first == 'button-container' %}
+            {% include './components/button.html' %}
+        {% elif element.keys()|first == 'gauge' %}
+            {% include './components/gauge.html' %}
+        {% elif element.keys()|first == 'slider' %}
+            {% include './components/slider.html' %}
+        {% elif element.keys()|first == 'switch' %}
+            {% include './components/switch.html' %}
+        {% endif %}
+    {% endfor %}
+</div>

@@ -1,0 +1,50 @@
+.styled-slider {
+    --value: 0;
+    --percent: calc(var(--value) * 100% / 100);
+
+    margin: auto;
+    margin-top: 10px;
+    position: relative;
+    width: 100%;
+    height: 40px;
+    background: rgb(2,0,36);
+    background: linear-gradient(90deg, #8aadf4 var(--percent), gray var(--percent)); 
+    border-radius: 12px;
+    z-index: 1;
+    overflow:hidden
+}
+
+.styled-slider::after {
+    position: absolute;
+    content: "";
+    height: 40px;
+    width: 10px;
+    background: #b7bdf8;
+    left: calc(var(--percent) - 1%);
+    top: 0;
+    border-radius: 12px;
+}
+
+input.invisible[type=range] {
+    appearance: none;
+    position: inherit;
+    background: transparent;
+    width: 100%;
+    height: 100%;
+    z-index: 4;
+}
+
+input.invisible[type=range]::-moz-range-thumb {
+    width: 0;
+    visibility: hidden;
+}
+
+input.invisible[type=range]::-webkit-slider-thumb {
+    width: 0;
+    visibility: hidden;
+}
+
+input.invisible[type=range]::-ms-thumb  {
+    width: 0;
+    visibility: hidden;
+}

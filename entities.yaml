@@ -1,0 +1,56 @@
+buero.switch.state:
+  type: sensor
+  data_source:
+    mqtt:
+        topic: test/switch
+        key: state
+  actions:
+    - on_update:
+      - set: "$tmp = value"
+      - if:
+          condition: "$tmp == 'on' AND buero.temperature.temperature < '20'"
+          then:
+            - set: "buero.light.state = 'on'"
+          else:
+            - set: "buero.light.state = 'off'"
+
+buero.temperature.temperature:
+  type: sensor
+  data_source:
+    mqtt:
+        topic: test/temperature
+        key: temperature
+
+buero.temperature.humidity:
+  type: sensor
+  data_source:
+    mqtt:
+        topic: test/temperature
+        key: humidity
+
+
+buero.light.state:
+  type: actor
+  data_source:
+    mqtt:
+        topic: test/light
+        key: state
+  data_sink:
+    mqtt:
+        topic: test/light/set
+        key: state
+
+buero.light.brightness:
+  type: actor
+  data_source:
+    mqtt:
+        topic: test/light
+        key: brightness
+  data_sink:
+    mqtt:
+        topic: test/light/set
+        key: brightness
+
+
+
+

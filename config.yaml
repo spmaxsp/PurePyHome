@@ -1,0 +1,25 @@
+mqtt:
+  broker_url: localhost
+  broker_port: 1883
+  username: test-user1
+  password: "123456789"
+  keepalive: 5
+  tls_enabled: False
+ui:
+  dashboard1:
+      type: dashboard
+      title: My Dashboard
+      layout: ./layout1.yaml
+      icon: MD::home
+  dashboard2:
+      type: dashboard
+      title: My Dashboard 2
+      layout: ./layout2.yaml
+      icon: MD::home
+  zigbee2mqtt:
+      type: iframe
+      title: Zigbee2MQTT
+      url: http://192.168.1.101:83
+      icon: CSS::mdi--zigbee
+entities:
+  - ./entities.yaml

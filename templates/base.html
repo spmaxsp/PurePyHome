@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="/material-symbols-main/material-symbols/index.css" rel="stylesheet">
+  <link href='/css/css-symbols.css' rel='stylesheet'>
+
+  <link href='/css/index.css' rel='stylesheet'>
+
+  {% block head %} {% endblock %}
+
+</head>
+
+{% block includes %} {% endblock %}
+
+<body>
+  <div class="sidebar">
+    {% for item in pages %}
+      <a href="/ui/{{ item }}">
+        {% set icon_prefix, icon_suffix = pages[item]['icon'].split('::') %}
+        {% if icon_prefix == 'CSS' %}
+          <span class="{{ icon_suffix }} sidebar-icon" style="height: 35px; width: 35px;"></span>
+        {% else %}
+          <span class="material-symbols-rounded sidebar-icon" style="font-size: 35px;">{{ icon_suffix }}</span>
+        {% endif %}
+        <span class="sidebar-text">{{ pages[item]['title'] }}</span>
+      </a>
+    {% endfor %}
+  </div>
+  
+  <div class="content">
+    {% block content %} {% endblock %}
+  </div>
+</body>
+
+{% block scripts %} {% endblock %}
+
+</html>

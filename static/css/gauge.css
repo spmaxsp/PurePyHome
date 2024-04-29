@@ -1,0 +1,85 @@
+.gauge-container {
+    --percent: 50;
+    --track-with: 0.7rem;
+
+    aspect-ratio: 2/1;
+    width: 10rem;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: calc(10px + var(--track-with));
+    position: relative;
+}
+
+.gauge-track {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+    border-style: solid;
+    border-bottom-style: none;
+    border-color: gray;
+    border-width: var(--track-with);
+    border-radius: 50% / 100% 100% 0 0;
+}
+
+.gauge-track::after {
+    content: "";
+    position: absolute;
+    bottom: calc(-0.5 * var(--track-with));
+    right: calc(-1 * var(--track-with));
+    height: var(--track-with);
+    width: var(--track-with);
+    background-color: gray;
+    border-radius: 50%;
+}
+
+.gauge-main-mask {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.gauge-main {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+    border-style: solid;
+    border-bottom-style: none;
+    border-color: #8aadf4;
+    border-width: var(--track-with);
+    transform: rotate(calc(var(--percent) * 180deg / 100 - 180deg));
+    transform-origin: bottom center;
+    border-radius: 50% / 100% 100% 0 0;
+}
+
+.gauge-end {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+    transform: rotate(calc(var(--percent) * 180deg / 100 - 180deg));
+    transform-origin: bottom center;
+}
+
+.gauge-end::after {
+    content: "";
+    position: absolute;
+    bottom: calc(-0.5 * var(--track-with));
+    right: 0;
+    height: var(--track-with);
+    width: var(--track-with);
+    background-color: #b7bdf8;
+    border-radius: 50%;
+}
+
+.gauge-start {
+    position: absolute;
+    bottom: calc(-0.5 * var(--track-with));
+    left: 0;
+    height: var(--track-with);
+    width: var(--track-with);
+    background-color: #8aadf4;
+    border-radius: 50%;
+}

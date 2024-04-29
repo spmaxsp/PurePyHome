@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <link href='/css/buttons.css' rel='stylesheet'>
+    <link href='/css/gauge.css' rel='stylesheet'>
+    <link href='/css/onoffswitch.css' rel='stylesheet'>
+    <link href='/css/slider.css' rel='stylesheet'>
+{% endblock %}
+
+{% block includes %}
+    <script type="text/javascript" src="/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="/socket.io.min.js"></script>
+    <script type="text/javascript" src="/chart.min.js"></script>
+{% endblock %}
+
+{% block content %}
+    <h2>My Home</h2>
+    <div id="subscribe_messages"></div>
+    <div class="row">
+        {% for col in layout %}
+            <div class="column">
+                {% for card in col['col'] %}
+                    {% if card.keys()|first == 'card' %}
+                        {% include './components/card.html' %}
+                    {% elif card.keys()|first == 'mini-card' %}
+                        {% include './components/mini-card.html' %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" charset="utf-8">
+
+        function update_element_from_server(element_id, data) {
+            element = document.getElementById(element_id);   
+            if (element) {
+                ui_type = element.getAttribute('ui_type')
+                console.log('Found element: ' + element_id + ' with type: ' + ui_type);
+                if (ui_type == 'gauge') {
+                    try {
+                        num = Number(data);
+                        min = Number(element.getAttribute('min'));
+                        max = Number(element.getAttribute('max'));
+                        percent = (num - min) * (100 - 0) / (max - min) + 0;
+                        element.style.setProperty('--percent', percent);
+                    } catch (error) {
+                        console.log('Error updating gauge: ' + error);
+                    }
+                }
+                else if (ui_type == 'mini-card') {
+                    try {
+                        on_payload = element.getAttribute('payload_on');
+                        off_payload = element.getAttribute('payload_off');
+                        console.log('On payload: ' + on_payload); 
+                        console.log('Off payload: ' + off_payload);
+                        switch_element = document.getElementById('onoffswitch-' + element_id);
+                        console.log('Switch element: ' + switch_element);
+                        if (data == on_payload) {
+                            switch_element.checked = true;
+                        } else if (data == off_payload) {
+                            switch_element.checked = false;
+                        }
+                    } catch (error) {
+                        console.log('Error updating mini-card: ' + error);
+                    }
+                }
+            }         
+        }
+
+        
+
+        function update_element_to_server(element_id, data) {
+            console.log('Updating element: ' + element_id + ' with data: ' + data);
+            socket.emit('update_element', {element_id: element_id, data: data});
+        }
+
+        $(document).ready(function () {
+            const socket = io.connect('http://' + document.domain + ':' + location.port);
+            
+            // Connect listener
+            socket.on('connect', function() {
+                console.log('Socket.IO connected');
+            });
+
+            // Event listener for MQTT messages
+            socket.on('dashboard_data', function(data) {
+                console.log(data);
+                for (let element in data) {
+                    console.log('Updating element: ' + element + ' with data: ' + data[element]);
+                    update_element_from_server(element, data[element]);
+                }
+            });     
+            
+            function publish_to_server(element_id, data) {
+                console.log('Publishing to server: ' + element_id + ' with data: ' + data);
+                publish = {};
+                publish[element_id] = data;
+                socket.emit('dashboard_data', publish);
+            }
+
+            window.publish_to_server = publish_to_server;
+        });
+
+        function on_ui_event(this_element, main_element_id) {
+            main_element = document.getElementById(main_element_id);   
+            if (main_element) {
+                ui_type = main_element.getAttribute('ui_type')
+                if (ui_type == 'mini-card') {
+                    on_payload = main_element.getAttribute('payload_on');
+                    off_payload = main_element.getAttribute('payload_off');
+                    if (this_element.checked) {
+                        publish_to_server(main_element_id, on_payload);
+                    } else {
+                        publish_to_server(main_element_id, off_payload);
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script type="text/javascript" charSet="utf-8">
+        for (let e of document.querySelectorAll('.styled-slider')) {
+        if (e.firstElementChild.type == "range") {
+            console.log(e)
+            e.firstElementChild.addEventListener('input', () => e.style.setProperty('--value', e.firstElementChild.value));
+        }
+    }
+    </script>
+{% endblock %}
+
