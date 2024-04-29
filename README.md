@@ -1,26 +1,26 @@
 ![purepyhome_logo_wide_vector](https://github.com/spmaxsp/PurePyHome/assets/75380717/4b1a52f6-60a6-4490-89a1-3d815717f442)
 
 # PurePy Home
+This project attempts to create a simple smarthome system using only Python and HTML. 
+The server runs on an eventlet server with a Flask application. 
+The system is completely configured using YAML files.
 
-This project tries to create a simple smarthome system using only Python and HTML.
-The server runs on a eventlet server with a Flask application. 
-The sytem is completely configured using YAML files.
-
-*For now the project in the prototype stage. While most of the functionality is implemented, it needs to be cleaned up and tested and documented.
-Also a lot of features, to make it competitive with other smarthome systems, are missing.*
+*The project is currently in the prototype stage. 
+While most of the functionality is implemented, it needs to be cleaned up, tested and documented. 
+A lot of features are still missing to make it competitive with other smarthome systems.*
 
 ## Motivation
 The obvious question is why create another smarthome system, when there are already so many out there? Especially with competitors like Home Assistant, OpenHAB, or Node-Red, it seems like a waste of time to create another one.
 
 The simple main reason is, that every solution out there somehow has something that I don't like.
-- Home Assistant is a great system, but i don't like the way how its configured. My biggest problem is how its somehow moving away from the yaml configuration to a more gui based configuration, while giving the user no control over the entities.
+- Home Assistant is a great system, but I don't like the way how its configured. My biggest problem is how its somehow moving away from the yaml configuration to a more gui based configuration, while giving the user no control over the entities.
 Might be a personal preference and definitely something to argue about.
 - Node red is a great tool. I especially like the way how the flows are created. Sadly it is not that easy to create a nice UI with it.
 
-So the goal of this project is to create a smarthome system that is easily configurable using only yaml files. Also im trying to keep it as minimalistic as possible.
-This solution is definitely not for everyone. Especially the minimalistic and also extremely flexible approach definitely makes a steep learning curve.
+So the goal of this project is to create a smarthome system that can be easily configured using only yaml files. I also try to keep it as minimalist as possible.
+This solution is definitely not for everybody. Especially the minimalistic and extremely flexible approach definitely makes for a steep learning curve.
 
-The solution is definitely tailored to the "i want to have full control and configure everything myself" kind of person.
+The solution is definitely tailored to the "I want full control and configure everything myself" type of person.
 
 ## Overview
 The server consists of e few modular parts:
@@ -64,4 +64,4 @@ TODO
  A proper Roadmap will be added later.
 
 ## License
-TODO
+This project is licensed under the MIT licence - see the [LICENSE](./LICENSE) file for details.
