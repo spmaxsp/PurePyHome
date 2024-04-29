@@ -1,4 +1,4 @@
-
+![purepyhome_logo_wide_vector](https://github.com/spmaxsp/PurePyHome/assets/75380717/4b1a52f6-60a6-4490-89a1-3d815717f442)
 
 # PurePy Home
 
