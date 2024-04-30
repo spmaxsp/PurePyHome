@@ -9,13 +9,15 @@ The system is completely configured using YAML files.
 While most of the functionality is implemented, it needs to be cleaned up, tested and documented. 
 A lot of features are still missing to make it competitive with other smarthome systems.*
 
+**Also Note:** *While the project aims to be a complete standalone system like Node-Red or Homeastistent, I recommend using it together with Node-Red (at least for the current state of development). Node-Red is a great addition to this project and offers many features like data conversion or other modules/sensors that are not implemented yet.*
+
 ## Motivation
 The obvious question is why create another smarthome system, when there are already so many out there? Especially with competitors like Home Assistant, OpenHAB, or Node-Red, it seems like a waste of time to create another one.
 
 The simple main reason is, that every solution out there somehow has something that I don't like.
 - Home Assistant is a great system, but I don't like the way how its configured. My biggest problem is how its somehow moving away from the yaml configuration to a more gui based configuration, while giving the user no control over the entities.
 Might be a personal preference and definitely something to argue about.
-- Node red is a great tool. I especially like the way how the flows are created. Sadly it is not that easy to create a nice UI with it.
+- Node-Red is a great tool. I especially like the way how the flows are created. Sadly it is not that easy to create a nice UI with it.
 
 So the goal of this project is to create a smarthome system that can be easily configured using only yaml files. I also try to keep it as minimalist as possible.
 This solution is definitely not for everybody. Especially the minimalistic and extremely flexible approach definitely makes for a steep learning curve.
@@ -59,9 +61,8 @@ TODO
 TODO
 
 ## Rodamap
- The planned features planned to be implemented in the near future are documented in the [ToDo](./ToDo.md) file.
-
- A proper Roadmap will be added later.
+Features planned for implementation in the near future are documented in the [ToDo](./ToDo.md) file.
+As far as the far future is concerned, a proper roadmap will follow.
 
 ## License
 This project is licensed under the MIT licence - see the [LICENSE](./LICENSE) file for details.
