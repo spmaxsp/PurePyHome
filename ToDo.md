@@ -6,9 +6,11 @@ the list is not in any particular order, and definitely needs to be replaced by 
 
 ## General
 - [ ] Move Configuration to a separate folder
-- [ ] Move the project to a python-virtualenv and add a requirements.txt
-- [ ] Push the project to a git repository
-- [ ] Move project into a Docker container
+- [ ] Make Config folder mountable in Docker
+- [x] Move the project to a python-virtualenv and add a requirements.txt
+- [x] Push the project to a git repository
+- [x] Move project into a Docker container
+- [ ] Ability to run without MQTT server (handle connection error)
 - [ ] Do a first test of the project on a real server and mqtt network
 
 ## Clean up
