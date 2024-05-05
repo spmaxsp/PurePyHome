@@ -39,17 +39,17 @@ def create_app(debug: bool = False, config: str = "./config.yaml"):
     entity_data_base.build_db(entity_handler.get_all_entities())
 
     # Initialize mqtt
-    app.logger.info('create_app::: Initializing mqtt')
-    from app.mqtt import mqtt, mqtt_data_subscriber, mqtt_data_publisher
-    mqtt.init_app(app)
-    mqtt_data_subscriber.init_app(app)
-    mqtt_data_publisher.init_app(app)
+    #app.logger.info('create_app::: Initializing mqtt')
+    #from app.mqtt import mqtt, mqtt_data_subscriber, mqtt_data_publisher
+    #mqtt.init_app(app)
+    #mqtt_data_subscriber.init_app(app)
+    #mqtt_data_publisher.init_app(app)
 
     # Build mqtt data subscriber map
-    app.logger.info('create_app::: Building mqtt data subscriber map')
-    mqtt_data_subscriber.build_map(entity_handler.get_all_entities())
-    app.logger.info('create_app::: Building mqtt data publisher map')
-    mqtt_data_publisher.build_map(entity_handler.get_all_entities())
+    #app.logger.info('create_app::: Building mqtt data subscriber map')
+    #mqtt_data_subscriber.build_map(entity_handler.get_all_entities())
+    #app.logger.info('create_app::: Building mqtt data publisher map')
+    #mqtt_data_publisher.build_map(entity_handler.get_all_entities())
 
     # Initialize socketio
     app.logger.info('create_app::: Initializing socketio')

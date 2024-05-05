@@ -64,13 +64,13 @@ class EntityHandler:
                             actions_phraser.phrase_action(action["on_change"])
 
         # publish data if needed
-        if entity_id in self.entities:
-            if "data_sink" in self.entities[entity_id]:
-                self.app.logger.info(f'entity_handler::: Publishing data for entity {entity_id}')
-                if "mqtt" in self.entities[entity_id]["data_sink"]:
-                    if event_source != "mqtt":
-                        from app.mqtt import mqtt_data_publisher
-                        mqtt_data_publisher.publish_entity(entity_id, entity_data)
+        #if entity_id in self.entities:
+        #    if "data_sink" in self.entities[entity_id]:
+        #        self.app.logger.info(f'entity_handler::: Publishing data for entity {entity_id}')
+        #        if "mqtt" in self.entities[entity_id]["data_sink"]:
+        #            if event_source != "mqtt":
+        #                from app.mqtt import mqtt_data_publisher
+        #                mqtt_data_publisher.publish_entity(entity_id, entity_data)
 
         # update ui
         if entity_id in self.entities:
