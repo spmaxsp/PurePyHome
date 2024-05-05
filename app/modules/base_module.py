@@ -10,6 +10,16 @@ class ModuleInfo(NamedTuple):
     description: str
 
 class BaseModule(ABC):
+    """ Base class for all modules
+    Defines the functions the modules must implement to interface with the main application
+    
+    Functions:
+        init_module: Initialize the module
+        on_entity_update: This function is called by the entity handler when an entity is updated
+        get_module_info: Get information about the module
+        get_initialized: Get the initialized status of the module
+    """
+
     @abstractmethod
     def init_module(self, app: flask.Flask, entities: dict, update_entity_callback: callable) -> None:
         """ Initialize the module
@@ -40,5 +50,15 @@ class BaseModule(ABC):
             None
         Returns:
             ModuleInfo: A named tuple containing information about the module
+        """
+        pass
+
+    @abstractmethod
+    def get_initialized(self) -> bool:
+        """ Get the initialized status of the module
+        Args:
+            None
+        Returns:
+            bool: True if the module is initialized, False otherwise
         """
         pass
