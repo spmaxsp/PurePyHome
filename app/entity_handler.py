@@ -6,6 +6,7 @@ class EntityHandler:
     def __init__(self):
         self.app = None
         self.entities = {}
+        self.push_update_callbacks = {}
 
     def init_app(self, app):
         self.app = app
@@ -23,6 +24,15 @@ class EntityHandler:
         
     def get_all_entities(self):
         return self.entities
+    
+    def register_push_update_callback(self, callback, module_id):
+        self.push_update_callbacks[module_id] = callback
+        self.app.logger.info(f'entity_handler::: Registered push update callback for module {module_id}')
+
+    def remove_push_update_callback(self, module_id):
+        if module_id in self.push_update_callbacks:
+            del self.push_update_callbacks[module_id]
+            self.app.logger.info(f'entity_handler::: Removed push update callback for module {module_id}')
 
     def update_entity(self, entity_id, entity_data, event_source, call_stack):
         if entity_id in call_stack:
@@ -66,6 +76,11 @@ class EntityHandler:
         if entity_id in self.entities:
             from app.ui_socketio import dashboard_data_publisher
             dashboard_data_publisher.publish_data(entity_id, entity_data) 
+
+        # push update to modules
+        for module_id in self.push_update_callbacks:
+            self.app.logger.info(f'entity_handler::: Pushing update to module {module_id}')
+            self.push_update_callbacks[module_id](entity_id, entity_data)
 
 
 
