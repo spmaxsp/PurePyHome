@@ -1,10 +1,12 @@
 
-from .mqtt import Mqtt
+from .mqtt.mqtt import Mqtt
+
+#mqtt_module = Mqtt()  # does work here
 
 class ModuleManager():
 
     def __init__(self):
-        self.modules = []
+        self.mqtt_module = None
 
     def init_modules(self, app, entity_handler):
         """ Initialize all modules
@@ -14,9 +16,9 @@ class ModuleManager():
         Returns:
             None
         """
-        mqtt = Mqtt()
-        mqtt.init_module(app, entity_handler.get_all_entities(), entity_handler.update_entity)
+        self.mqtt_module = Mqtt()   # does not work
+        self.mqtt_module.init_module(app, entity_handler.get_all_entities(), entity_handler.update_entity)
 
-        entity_handler.register_push_update_callback('mqtt', mqtt.on_entity_update)
+        entity_handler.register_push_update_callback('mqtt', self.mqtt_module.on_entity_update)
         
-        self.modules.append(mqtt)
+        #self.modules.append(mqtt_module)

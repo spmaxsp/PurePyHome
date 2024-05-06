@@ -25,7 +25,7 @@ class EntityHandler:
     def get_all_entities(self):
         return self.entities
     
-    def register_push_update_callback(self, callback, module_id):
+    def register_push_update_callback(self, module_id, callback):
         self.push_update_callbacks[module_id] = callback
         self.app.logger.info(f'entity_handler::: Registered push update callback for module {module_id}')
 

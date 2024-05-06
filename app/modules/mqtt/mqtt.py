@@ -1,4 +1,4 @@
-from flask_mqtt import Mqtt
+from flask_mqtt import Mqtt as FlaskMqtt
 from app.modules.base_module import BaseModule, ModuleInfo
 
 from .mqtt_data_subscriber import MqttDataSubscriber
@@ -45,7 +45,7 @@ class Mqtt(BaseModule):
         self.update_entity_callback = update_entity_callback
 
         # Initialize the MQTT object and the MQTT data subscriber and publisher
-        self.mqtt = Mqtt(app)
+        self.mqtt = FlaskMqtt(app)
         self.mqtt.init_app(app)
         self.mqtt_data_subscriber = MqttDataSubscriber(self.mqtt)
         self.mqtt_data_subscriber.init_app(app)
@@ -116,7 +116,7 @@ class Mqtt(BaseModule):
         if self.initialized:
             self.mqtt_data_subscriber.handle_mqtt_message(client, userdata, message)
 
-    def handle_connect(client, userdata, flags, rc):
+    def handle_connect(self, client, userdata, flags, rc):
         """ Handler for MQTT connection, does nothing at the moment
 
         Args:
@@ -129,6 +129,7 @@ class Mqtt(BaseModule):
         """
 
         pass
+
 
 
 

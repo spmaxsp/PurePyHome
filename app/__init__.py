@@ -4,73 +4,87 @@ import logging
 from flask import Flask
 import yaml
 
-def create_app(debug: bool = False, config: str = "./config.yaml"):
-
-    # Setup logging
-    set_logger()
-
-    # Initialize app
-    app = Flask(__name__, template_folder='../templates', static_folder='../static', static_url_path='/')
-    app.logger.info('create_app::: Initializing app')
-
-    # Setup app configs
-    app.logger.info('create_app::: Loading config')
-    load_config(app, debug, config)
-
-    # Initialize entity handler
-    app.logger.info('create_app::: Initializing entity handler')
-    from app.entity_handler import entity_handler
-    entity_handler.init_app(app)
-
-    # Load entities
-    app.logger.info('create_app::: Loading entities')
-    for yaml_file in app.config['ENTITIES']:
-        entity_handler.open_entity_yaml(yaml_file)
-
-    # Initialize database
-    app.logger.info('create_app::: Initializing database')
-    from app.entity_db import db, entity_data_base
-    db.init_app(app)
-    entity_data_base.init_app(app)
-
-    # Build database
-    app.logger.info('create_app::: Building database')
-    entity_data_base.init_db()
-    entity_data_base.build_db(entity_handler.get_all_entities())
-
-    # Initialize mqtt
-    #app.logger.info('create_app::: Initializing mqtt')
-    #from app.mqtt import mqtt, mqtt_data_subscriber, mqtt_data_publisher
-    #mqtt.init_app(app)
-    #mqtt_data_subscriber.init_app(app)
-    #mqtt_data_publisher.init_app(app)
-
-    # Build mqtt data subscriber map
-    #app.logger.info('create_app::: Building mqtt data subscriber map')
-    #mqtt_data_subscriber.build_map(entity_handler.get_all_entities())
-    #app.logger.info('create_app::: Building mqtt data publisher map')
-    #mqtt_data_publisher.build_map(entity_handler.get_all_entities())
-
-    # Initialize socketio
-    app.logger.info('create_app::: Initializing socketio')
-    from app.ui_socketio import socketio, dashboard_data_publisher, dashboard_data_subscriber
-    socketio.init_app(app)
-    dashboard_data_publisher.init_app(app)
-    dashboard_data_subscriber.init_app(app)
-    for ui_elem in app.config['UI_PAGES']:
-        print(ui_elem)
-        print(app.config['UI_PAGES'][ui_elem])
-        if app.config['UI_PAGES'][ui_elem]['type'] == 'dashboard':
-            dashboard_data_publisher.build_map_from_layout_yaml(app.config['UI_PAGES'][ui_elem]['layout'])
-            dashboard_data_subscriber.build_map_from_layout_yaml(app.config['UI_PAGES'][ui_elem]['layout'])
-    
-    # Import and register blueprints
-    app.logger.info('create_app::: Registering blueprints')
-    from app.ui_blueprints import ui_blueprints
-    app.register_blueprint(ui_blueprints)
 
 
-    return app, socketio
+class App:
+    def __init__(self) -> None:
+        self.app = None
+        self.socketio = None
+        self.module_manager = None
+
+    def create_app(self, debug: bool = False, config: str = "./config.yaml"):
+
+        # Setup logging
+        set_logger()
+
+        # Initialize app
+        self.app = Flask(__name__, template_folder='../templates', static_folder='../static', static_url_path='/')
+        self.app.logger.info('create_app::: Initializing app')
+
+        # Setup app configs
+        self.app.logger.info('create_app::: Loading config')
+        load_config(self.app, debug, config)
+
+        # Initialize entity handler
+        self.app.logger.info('create_app::: Initializing entity handler')
+        from app.entity_handler import entity_handler
+        entity_handler.init_app(self.app)
+
+        # Load entities
+        self.app.logger.info('create_app::: Loading entities')
+        for yaml_file in self.app.config['ENTITIES']:
+            entity_handler.open_entity_yaml(yaml_file)
+
+        # Initialize database
+        self.app.logger.info('create_app::: Initializing database')
+        from app.entity_db import db, entity_data_base
+        db.init_app(self.app)
+        entity_data_base.init_app(self.app)
+
+        # Build database
+        self.app.logger.info('create_app::: Building database')
+        entity_data_base.init_db()
+        entity_data_base.build_db(entity_handler.get_all_entities())
+
+        # Initialize module manager
+        self.app.logger.info('create_app::: Initializing module manager')
+        
+        from app.modules import ModuleManager
+        self.module_manager = ModuleManager()
+        self.module_manager.init_modules(self.app, entity_handler)
+
+        # Initialize mqtt
+        #app.logger.info('create_app::: Initializing mqtt')
+        #from app.mqtt import mqtt, mqtt_data_subscriber, mqtt_data_publisher
+        #mqtt.init_app(app)
+        #mqtt_data_subscriber.init_app(app)
+        #mqtt_data_publisher.init_app(app)
+
+        # Build mqtt data subscriber map
+        #app.logger.info('create_app::: Building mqtt data subscriber map')
+        #mqtt_data_subscriber.build_map(entity_handler.get_all_entities())
+        #app.logger.info('create_app::: Building mqtt data publisher map')
+        #mqtt_data_publisher.build_map(entity_handler.get_all_entities())
+
+        # Initialize socketio
+        self.app.logger.info('create_app::: Initializing socketio')
+        from app.ui_socketio import socketio, dashboard_data_publisher, dashboard_data_subscriber
+        self.socketio = socketio
+        self.socketio.init_app(self.app)
+        dashboard_data_publisher.init_app(self.app)
+        dashboard_data_subscriber.init_app(self.app)
+        for ui_elem in self.app.config['UI_PAGES']:
+            print(ui_elem)
+            print(self.app.config['UI_PAGES'][ui_elem])
+            if self.app.config['UI_PAGES'][ui_elem]['type'] == 'dashboard':
+                dashboard_data_publisher.build_map_from_layout_yaml(self.app.config['UI_PAGES'][ui_elem]['layout'])
+                dashboard_data_subscriber.build_map_from_layout_yaml(self.app.config['UI_PAGES'][ui_elem]['layout'])
+        
+        # Import and register blueprints
+        self.app.logger.info('create_app::: Registering blueprints')
+        from app.ui_blueprints import ui_blueprints
+        self.app.register_blueprint(ui_blueprints)
+
 
 
 LOG_LEVEL_COLORS = {
