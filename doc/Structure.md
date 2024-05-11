@@ -31,7 +31,7 @@ This gives a brief overview of the project structure.
     │   ├── socketio.py
     │   ├── signals.py
     │   ├── utils.py
-    |   └── logger.py
+    |   ├── logger.py
     │   └── __init__.py
     ├── modules/
     │   ├── mqtt/
