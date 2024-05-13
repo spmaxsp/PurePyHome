@@ -92,6 +92,7 @@ def setup_logger():
     sqlalchemy_logger.addHandler(console_handler)
 
     app_logger.propagate = False
+    application_logger.propagate = False
     eventlet_wsgi_logger.propagate = False
     eventlet_wsgi_http_logger.propagate = False
     mqtt_logger.propagate = False
@@ -121,8 +122,9 @@ def get_module_logger(module_name: str) -> logging.Logger:
     Returns:
         logging.Logger: The logger for the module
     """
+    module_name = module_name.split('.')[-1]
 
-    logger_name = f'purepyhome.{module_name}'
+    logger_name = f'purepyhome.module.{module_name}'
 
     logger = logging.getLogger(logger_name)
     logger.setLevel(logging.DEBUG)
