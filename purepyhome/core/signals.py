@@ -39,7 +39,7 @@ def update_entity_over_signal(sender: str, entity_id: str, value, callstack: lis
     current_value = get_entity_over_signal(entity_id).value
     
     callstack.append(sender)
-    update_entity.send(None, entity_id=entity_id, new_value=value, last_value=current_value, callstack=callstack)
+    update_entity.send(None, entity_id=entity_id, value=value, last_value=current_value, callstack=callstack)
 
 
 def get_entity_over_signal(entity_id):
@@ -58,5 +58,4 @@ def get_entity_over_signal(entity_id):
         return None
 
     reciever, entity = response[0]
-    print(entity)
-    return entity.value
+    return entity
