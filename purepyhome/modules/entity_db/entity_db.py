@@ -1,5 +1,7 @@
 from purepyhome.core.db.sqlalchemy import db
-from purepyhome.core.signals import register_entity, update_entity, remove_entity, get_entity
+from purepyhome.core.signals.register_entity import connect_to_register_entity
+from purepyhome.core.signals.update_entity import connect_to_update_entity
+from purepyhome.core.signals.get_entity import connect_to_get_entity
 from purepyhome.core.utils import detect_color_and_convert
 from purepyhome.core.logger import get_module_logger
 
@@ -35,9 +37,9 @@ class EntityDB:
         self.db = db
         self.app = None
 
-        register_entity.connect(self.on_register_entity)
-        update_entity.connect(self.on_update_entity)
-        get_entity.connect(self.on_get_entity)
+        connect_to_register_entity(self.on_register_entity)
+        connect_to_update_entity(self.on_update_entity)
+        connect_to_get_entity(self.on_get_entity)
 
 
     def init_app(self, app):
@@ -78,11 +80,13 @@ class EntityDB:
         try:
             entity_id = kwargs.get('entity_id')
             value = kwargs.get('value')
+            last_value = kwargs.get('last_value')
+            callstack = kwargs.get('callstack')
         except Exception as e:
             logger.error(f'Error getting required parameters: {e}')
             return
         else:
-            self.__update_entity(entity_id, value)
+            self.__update_entity(entity_id, value, last_value)
 
 
     def on_get_entity(self, sender, **kwargs):
@@ -130,7 +134,7 @@ class EntityDB:
         logger.info(f'Created db entity {entity_id}')
 
 
-    def __update_entity(self, entity_id, value):
+    def __update_entity(self, entity_id, value, last_value):
         """Update an entity in the database
             For now, the value is always a string. This will be changed in the future
         
@@ -150,7 +154,7 @@ class EntityDB:
                 entity = EntityData.query.filter_by(entity_id=entity_id).first()
 
                 if entity:
-                    entity.last_value = entity.value
+                    entity.last_value = str(last_value)
                     entity.value = str(value)
                     entity.timestamp = datetime.now()
 
@@ -196,6 +200,7 @@ class EntityDB:
                 if entity:
                     return entity
                 else:
+                    logger.error(f'Entity {entity_id} not found')
                     return None
         except Exception as e:
             logger.error(f'Error getting entity: {e}')
