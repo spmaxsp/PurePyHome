@@ -14,16 +14,6 @@ _remove_entity = _entity_signals.signal('remove_entity', """
                                             Signal emitted when an entity is removed""")
 
 
-def remove_entity_over_signal(entity_id: str):
-    """Removes an entity using the remove_entity signal
-
-    Args:
-        entity_id: The entity id
-    Returns:
-        None
-    """
-    _remove_entity.send(None, entity_id=entity_id)
-
 def connect_to_remove_entity(signal_handler):
     """Connects a signal handler to the remove_entity signal
     
