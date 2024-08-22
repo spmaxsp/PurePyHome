@@ -1,10 +1,8 @@
 import eventlet
 
-eventlet.monkey_patch()
+#eventlet.monkey_patch()
 
-from eventlet import wsgi
-
-from purepyhome.web.flask.app import init_app
+from app import App
 import logging
 
 class WSGILog(object):
@@ -20,8 +18,10 @@ class WSGILog(object):
         else:
             self.log.debug(string.rstrip("\n"))
 
-app = init_app(debug=True)
+app = App()
+
+app.create_app(debug=True, config='./config.yaml')
 
 if __name__ == '__main__':
     #socketio.run(app, use_reloader=False, debug=True, log_output=True)
-    eventlet.wsgi.server(eventlet.listen(('127.0.0.1', 5000)), app, log_output=True, log=WSGILog())
+    eventlet.wsgi.server(eventlet.listen(('127.0.0.1', 5000)), app.app, log_output=True, log=WSGILog())
