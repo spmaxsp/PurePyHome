@@ -1,5 +1,7 @@
 buero.switch.state:
-  type: sensor
+  device_type: sensor
+  data_type: string
+  history_depth: 10
   data_source:
     mqtt:
         topic: test/switch
@@ -15,14 +17,18 @@ buero.switch.state:
             - set: "buero.light.state = 'off'"
 
 buero.temperature.temperature:
-  type: sensor
+  device_type: sensor
+  data_type: numeric
+  history_depth: 10
   data_source:
     mqtt:
         topic: test/temperature
         key: temperature
 
 buero.temperature.humidity:
-  type: sensor
+  device_type: sensor
+  data_type: numeric
+  history_depth: 10
   data_source:
     mqtt:
         topic: test/temperature
@@ -30,7 +36,9 @@ buero.temperature.humidity:
 
 
 buero.light.state:
-  type: actor
+  device_type: actor
+  data_type: string
+  history_depth: 10
   data_source:
     mqtt:
         topic: test/light
@@ -41,7 +49,9 @@ buero.light.state:
         key: state
 
 buero.light.brightness:
-  type: actor
+  device_type: actor
+  data_type: numeric
+  history_depth: 10
   data_source:
     mqtt:
         topic: test/light
