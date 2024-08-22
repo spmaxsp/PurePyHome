@@ -1,6 +1,5 @@
 
-from purepyhome.core.signals.get_entity import get_entity_over_signal
-from purepyhome.core.signals.update_entity import update_entity_over_signal
+from purepyhome.core.core import get_entity, update_entity
 
 class ActionsPhraser:
     def __init__(self):
@@ -27,7 +26,7 @@ class ActionsPhraser:
         
         # check if the variable is the value of an other entity
         else:
-            return get_entity_over_signal(variable).value
+            return get_entity(variable)['value']
 
 
     def solve_variable_set(self, variable: str, value: str) -> None:
@@ -38,7 +37,7 @@ class ActionsPhraser:
 
         # check if the variable is the value of the entity
         else:
-            update_entity_over_signal(__name__, entity_id=variable, value=value, callstack=self.call_stack_of_entitie_handler)
+            update_entity(__name__, entity_id=variable, value=value, callstack=self.call_stack_of_entitie_handler)
 
 
     def evaluate_condition(self, condition_str: str, depth=0) -> bool:

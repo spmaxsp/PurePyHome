@@ -1,7 +1,8 @@
 from purepyhome.core.mqtt import mqtt
+from purepyhome.core.data_types.creation_info import EntityCreationInfo
 from purepyhome.core.signals.register_entity import connect_to_register_entity
 from purepyhome.core.signals.remove_entity import connect_to_remove_entity
-from purepyhome.core.signals.update_entity import update_entity_over_signal
+from purepyhome.core.core import update_entity
 from purepyhome.core.utils import get_nested_value
 from purepyhome.core.logger import get_module_logger
 
@@ -56,8 +57,7 @@ class MqttSubscriber:
             logger.error(f'Error getting required parameters: {e}')
             return
         else:
-            if "data_source" in entity_info:
-                if "mqtt" in entity_info["data_source"]:
+
                     if "topic" in entity_info["data_source"]["mqtt"]:
                         topic = entity_info["data_source"]["mqtt"]["topic"]
                         if "key" in entity_info["data_source"]["mqtt"]:
@@ -136,7 +136,7 @@ class MqttSubscriber:
             if value is not None:
                 for entity in self.map[topic][key]:
                     logger.info(f'Updating entity {entity} with value {value}')
-                    update_entity_over_signal(__name__, entity_id=entity, value=value, callstack=[])
+                    update_entity(__name__, entity_id=entity, value=value, callstack=[])
 
 
     def __register_entity(self, topic, key, entity_id):
