@@ -34,9 +34,14 @@
 {% block scripts %}
     <script type="text/javascript" charset="utf-8">
 
-        function update_element_from_server(element_id, data) {
-            element = document.getElementById(element_id);   
+        function findElementsByDataId(dataId) {
+            return document.querySelectorAll('[data_id="' + dataId + '"]');
+        }
+
+        function update_element_from_server(data_id, data) {
+            element = findElementsByDataId(data_id)[0];
             if (element) {
+                element_id = element.getAttribute('id');
                 ui_type = element.getAttribute('ui_type')
                 console.log('Found element: ' + element_id + ' with type: ' + ui_type);
                 if (ui_type == 'gauge') {
@@ -67,16 +72,21 @@
                         console.log('Error updating mini-card: ' + error);
                     }
                 }
+                else if (ui_type == 'slider') {
+                    try {
+                        slider_element = document.getElementById('sliderinput-' + element_id);
+                        slider_element.value = data;
+                        slider_element.dispatchEvent(new Event('input'));
+                    } catch (error) {
+                        console.log('Error updating slider: ' + error);
+                    }
+                }
             }         
         }
 
-        
 
-        function update_element_to_server(element_id, data) {
-            console.log('Updating element: ' + element_id + ' with data: ' + data);
-            socket.emit('update_element', {element_id: element_id, data: data});
-        }
-
+        // Socket.IO
+        //
         $(document).ready(function () {
             const socket = io.connect('http://' + document.domain + ':' + location.port);
             
@@ -85,37 +95,43 @@
                 console.log('Socket.IO connected');
             });
 
-            // Event listener for MQTT messages
-            socket.on('dashboard_data', function(data) {
-                console.log(data);
-                for (let element in data) {
-                    console.log('Updating element: ' + element + ' with data: ' + data[element]);
-                    update_element_from_server(element, data[element]);
+            // Event listener for socket messages from server
+            socket.on('entity_update_from_serv', function(data) {
+                if ('entity_id' in data && 'value' in data) {
+                    update_element_from_server(data["entity_id"], data["value"]);
                 }
             });     
             
+            // Function to publish data to server
             function publish_to_server(element_id, data) {
                 console.log('Publishing to server: ' + element_id + ' with data: ' + data);
-                publish = {};
-                publish[element_id] = data;
-                socket.emit('dashboard_data', publish);
+                publish = {"entity_id": element_id, "value": data};
+                socket.emit('update_entity_to_serv', publish);
             }
 
             window.publish_to_server = publish_to_server;
         });
 
+
+        // Event handler for UI elements (buttons and switches etc.)
+        //
         function on_ui_event(this_element, main_element_id) {
             main_element = document.getElementById(main_element_id);   
             if (main_element) {
                 ui_type = main_element.getAttribute('ui_type')
+                data_id = main_element.getAttribute('data_id')
+
                 if (ui_type == 'mini-card') {
-                    on_payload = main_element.getAttribute('payload_on');
-                    off_payload = main_element.getAttribute('payload_off');
-                    if (this_element.checked) {
-                        publish_to_server(main_element_id, on_payload);
-                    } else {
-                        publish_to_server(main_element_id, off_payload);
-                    }
+                        on_payload = main_element.getAttribute('payload_on');
+                        off_payload = main_element.getAttribute('payload_off');
+                        if (this_element.checked) {
+                            publish_to_server(data_id, on_payload);
+                        } else {
+                            publish_to_server(data_id, off_payload);
+                        }
+                }
+                else if (ui_type == 'slider') {
+                        publish_to_server(data_id, this_element.value);
                 }
             }
         }

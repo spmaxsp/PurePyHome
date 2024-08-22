@@ -1,5 +1,12 @@
 <div class="half-column">
-    <div class="card" id="{{ card['mini-card'].id }}" payload_on="{{ card['mini-card'].payload_on }}" payload_off="{{ card['mini-card'].payload_off }}" ui_type="mini-card">
+    <div    class="card" 
+            ui_type="mini-card"
+            id="{{ card['mini-card'].id }}" 
+            data_id="{{ card['mini-card'].data }}"
+
+            payload_on="{{ card['mini-card'].payload_on }}" 
+            payload_off="{{ card['mini-card'].payload_off }}" 
+    >
         <h3> {{ card['mini-card'].title }} </h3>
         <p class="b">on</p>
         <div class="mini-card-bottom-container">

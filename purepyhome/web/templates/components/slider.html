@@ -1,3 +1,18 @@
-<div class="styled-slider">
-    <input class="invisible" type="range" min="0" max="100" value="50">
+<div 
+    class="styled-slider"
+    ui_type="slider"
+    id="{{ element['slider'].id }}" 
+    data_id="{{ element['slider'].data }}"
+
+    min="{{ element['slider'].min }}" 
+    max="{{ element['slider'].max }}" 
+>
+    <input 
+        class="invisible" 
+        type="range" 
+        min="{{ element['slider'].min }}" 
+        max="{{ element['slider'].max }}" 
+        id="sliderinput-{{ element['slider'].id }}"
+        onchange="on_ui_event(this, '{{ element['slider'].id }}')"
+    >
 </div>

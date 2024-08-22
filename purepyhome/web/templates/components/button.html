@@ -1,11 +1,17 @@
 <div class="button-container">
     {% for button in element['button-container'] %}
         {% if button.keys()|first == 'button' %}
-            <button class="button" id="button-{{ button['button'].id }}">{{ button['button'].text }}</button>
+            <button class="button" 
+                    id="button-{{ button['button'].id }}"
+            >{{ button['button'].text }}</button>
         {% elif button.keys()|first == 'button-secondary' %}
-            <button class="button secondary" id="button-{{ button['button-secondary'].id }}">{{ button['button-secondary'].text }}</button>
+            <button class="button secondary" 
+                    id="button-{{ button['button-secondary'].id }}"
+            >{{ button['button-secondary'].text }}</button>
         {% elif button.keys()|first == 'button-outline' %}
-            <button class="button outline" id="button-{{ button['button-outline'].id }}">{{ button['button-outline'].text }}</button>
+            <button class="button outline" 
+                    id="button-{{ button['button-outline'].id }}"
+            >{{ button['button-outline'].text }}</button>
         {% endif %}
     {% endfor %}
 </div>
