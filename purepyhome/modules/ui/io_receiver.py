@@ -1,5 +1,5 @@
 from purepyhome.core.socketio import socketio
-from purepyhome.core.signals.update_entity import update_entity_over_signal
+from purepyhome.core.core import update_entity
 from purepyhome.core.logger import get_module_logger
 
 import json
@@ -52,6 +52,6 @@ class SocketIoReceiver:
         """
 
         logger.debug(f'Updating entity: {entity_id} - {value}')
-        update_entity_over_signal("__name__", entity_id, value, [])
+        update_entity("__name__", entity_id, value, [])
 
 ui_io_receiver = SocketIoReceiver()
