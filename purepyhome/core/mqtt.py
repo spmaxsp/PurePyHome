@@ -11,4 +11,4 @@ class PurePyHomeMqtt(FlaskMqtt):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-mqtt = PurePyHomeMqtt()
+mqtt = PurePyHomeMqtt(connect_async=True)
