@@ -29,3 +29,16 @@ the list is not in any particular order, and definitely needs to be replaced by 
 - [ ] Add a proper configuration guide for the entities
 - [ ] Add a proper configuration guide for the dashboards
 - [ ] Add a proper configuration guide for the main configuration
+
+
+## Temporary Tasks
+- [ ] Node Red integration ideas (using MQTT with purepyhome.nodered.$entityname)
+- [ ] Enforce sensor and actor differentiation
+- [ ] Look over dashboard code and clean up
+- [ ] Get running non docker
+- [ ] Looging for the Siganls (make losgs more compact -> loglevel)
+- [ ] Clean up this ToDo list
+- [ ] Mqtt reconnect?
+- [ ] Improve Style of the Dashboard
+- [ ] Style of dashboard in config?
+- [ ] Read config in seperate file
