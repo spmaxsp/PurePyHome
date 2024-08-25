@@ -40,7 +40,7 @@ This gives a brief overview of the project structure.
     │   │   └── __init__.py
     │   ├── ui/
     │   │   ├── emitter.py
-    │   │   ├── reciever.py
+    │   │   ├── receiver.py
     │   │   └── __init__.py
     │   ├── entity_db/
     │   │   ├── entity_db.py
