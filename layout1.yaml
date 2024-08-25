@@ -6,9 +6,9 @@
         - gauge:
             id: gauge1
             data: buero.temperature.temperature
-            min: 0
-            max: 100
-            unit: '%'
+            min: -10
+            max: 40
+            unit: '°C'
         - gauge:
             id: gauge2
             data: buero.temperature.humidity
