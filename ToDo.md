@@ -10,12 +10,12 @@ the list is not in any particular order, and definitely needs to be replaced by 
 - [x] Move the project to a python-virtualenv and add a requirements.txt
 - [x] Push the project to a git repository
 - [x] Move project into a Docker container
-- [ ] Ability to run without MQTT server (handle connection error)
+- [x] Ability to run without MQTT server (handle connection error)
 - [ ] Do a first test of the project on a real server and mqtt network
 
 ## Clean up
-- [ ] Clean up the folder structure
-- [ ] Properly define the functions parameters and return values
+- [x] Clean up the folder structure
+- [x] Properly define the functions parameters and return values
 - [ ] Add proper error handling
 
 ## Features
@@ -32,13 +32,17 @@ the list is not in any particular order, and definitely needs to be replaced by 
 
 
 ## Temporary Tasks
+While refactoring the project, the following tasks emerged. Many are not directly related to refactoring, but are things i want to get done before continuing. (many could be moved to the general section)
+
 - [ ] Node Red integration ideas (using MQTT with purepyhome.nodered.$entityname)
 - [ ] Enforce sensor and actor differentiation
 - [ ] Look over dashboard code and clean up
-- [ ] Get running non docker
+- [ ] Get running on docker
 - [ ] Looging for the Siganls (make losgs more compact -> loglevel)
 - [ ] Clean up this ToDo list
 - [ ] Mqtt reconnect?
 - [ ] Improve Style of the Dashboard
 - [ ] Style of dashboard in config?
 - [ ] Read config in seperate file
+- [ ] Prevent core to be utilized in a wrong way (e.g. db)
+- [ ] Correcting Structure.md

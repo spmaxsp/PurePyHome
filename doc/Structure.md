@@ -62,21 +62,92 @@ This gives a brief overview of the project structure.
 ```
 
 ## Core
-In the core folder the main extensions are created. This makes the core extensions available all over the project, by importing them from core. 
+This provides the main functionality of the PurePyHome project. It contains all used flask extensions and all code that the modules and web application use.
 
-Also most of the core extensions put into wrappers, so that they can be easily extended and tailored to the needs of the project.
+It provides the following extensions, functions and signals for managing entities:
+
+### Extensions
+- db: flask_sqlalchemy (should not be used directly - only via the core functions)
+- mqtt flask-mqtt
+- socketio flask-socketio
+
+### Functions
+
+- create_entity: Function to create an entity in the database (fires register_entity signal)
+- update_entity: Function to update an entity in the database (fires update_entity signal)
+- remove_entity: Function to remove an entity from the database (fires remove_entity signal)
+- get_entity: Function to get an entity from the database
+- get_entity_history: Function to get the history of an entity from the database
 
 ### Signals
-This contains the signals that are used to communicate between the different modules.
 
-### Utils
-This contains some utility functions that are used throughout the project.
+- register_entity: Signal to register entities all over the application
+- remove_entity: Signal to remove entities all over the application
+- update_entity: Signal used to update entities all over the application in a standardized way
+
+Signals are should not be fired directly. They should be used via the core functions.
 
 ## Modules
-This contains the main code that makes up the project. The code is split into different modules, that can be easily replaced or extended.
+This contains the main modules that makes up the project. Modules integrate using the core functions and signals.
 
 ## Web
 This contains the main flask application. 
 In app.py the main flask application is created and initialized.
 
-In ui.py the main UI is created. It provides the main routes and blueprints for the UI.
+# Config Structures
+
+## Entities
+
+```yaml
+<Group>:
+	<Device>:
+		<Device-ID>:
+			Device-Type: [sensor|actor|virtual]
+			Data-Type: [string|numeric|bool|color|time|date|trigger|<user_defined>]
+			Keep_history: <depth>
+			Data_sink:
+				Mqtt:
+					Topic: <Topic>
+					Key: <Key>
+				Conversion: [auto|replace|<user-defined>]
+				Conversion_String: [on:true; off:false]
+			Data_source:
+				Mqtt:
+					Topic: <Topic>
+					Key: <Key>
+				Conversion: [auto|replace|<user-defined>]
+				Conversion_String: [on:true; off:false]
+			Actions:
+				On_change:
+					…
+				On_update:
+					…
+```	
+
+# DB Structures
+
+## DB-Entity
+
+```python
+id = db.Column(db.Integer, primary_key=True)
+entity_id = db.Column(db.String(80), unique=True, nullable=False)
+data_type = db.Column(db.String(80), nullable=False)
+value = db.Column(db.String(80), nullable=True)
+last_value = db.Column(db.String(80), nullable=True)
+max_historic_values = db.Column(db.Integer, nullable=False)
+
+timestamp = db.Column(db.DateTime(timezone=True), server_default=func.now())
+```
+
+## DB-History
+
+```python
+id = db.Column(db.Integer, primary_key=True)
+entity_id = db.Column(db.String(80), unique=True, nullable=False)
+value = db.Column(db.String(80), nullable=True)
+timestamp = db.Column(db.DateTime(timezone=True),  server_default=func.now())
+```
+
+
+
+
