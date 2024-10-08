@@ -1,4 +1,4 @@
-from .data_types.creation_info import EntityCreationInfo
+from .data_types.creation_info import EntityCreationInfo, check_entity_creation_info
 
 from .signals.register_entity import _register_entity
 from .signals.update_entity import _update_entity
@@ -14,6 +14,12 @@ def create_entity(new_entity: EntityCreationInfo):
     Returns:
         None
     """
+
+    try:
+        check_entity_creation_info(new_entity)
+    except ValueError as e:
+        #logger.error(f'Error: {e}')
+        return
 
     entity_db.create_entity(new_entity.entity_id, new_entity.data_type, new_entity.history_depth)
 
