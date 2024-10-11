@@ -124,6 +124,38 @@ In app.py the main flask application is created and initialized.
 					…
 ```	
 
+# Entity-Creation-Structure
+
+```python
+    EntityDataSourceInfo:
+        source_type: str
+        source_info: dict
+        conversion_type: str
+        conversion_str: str
+
+    EntityDataSinkInfo:
+        sink_type: str
+        sink_info: dict
+        conversion_type: str
+        conversion_str: str
+
+    EntityCreationInfo:
+        entity_id: str                      # a unique string identifier for the entity
+
+        device_type: str                    # the type of device: sensor, actuator, virtual
+        data_type: str                      # the type of data: string, numeric, bool, color, time, date, trigger
+        history_depth: int                  # the number of historical values to keep
+
+        data_source: EntityDataSourceInfo   # the data source information
+        data_sink: EntityDataSinkInfo       # the data sink information
+
+        node_red_mqtt_link: bool            # whether to link the entity to Node-RED via a MQTT topic (eg. purepyhome.node-link.<entity_id>.<write/read>)
+
+        actions: dict                       # the actions to be performed on entity change or update
+                                            # the dict should contain the keys 'on_change' and 'on_update'
+                                            # the script is implemented as a yaml syntax which gets stored as a dict
+``` 
+
 # DB Structures
 
 ## DB-Entity
