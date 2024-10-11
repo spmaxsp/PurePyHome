@@ -113,6 +113,7 @@ def setup_entities(app):
                     history_depth=0,
                     data_sink=None,
                     data_source=None,
+                    node_red_mqtt_link=False,
                     actions=None
                 )
 
@@ -158,6 +159,9 @@ def setup_entities(app):
                         conversion_type="",
                         conversion_str=""
                     )
+
+                if 'node_red_mqtt_link' in entity:
+                    creation_info.node_red_mqtt_link = entity['node_red_mqtt_link']
 
                 if 'actions' in entity:
                     creation_info.actions = entity['actions']

@@ -4,17 +4,18 @@ buero.switch.state:
   history_depth: 10
   data_source:
     mqtt:
-        topic: test/switch
-        key: state
+      topic: test/switch
+      key: state
+  node_red_mqtt_link: true
   actions:
     - on_update:
       - set: "$tmp = value"
       - if:
-          condition: "$tmp == 'on' AND buero.temperature.temperature < '20'"
-          then:
-            - set: "buero.light.state = 'on'"
-          else:
-            - set: "buero.light.state = 'off'"
+        condition: "$tmp == 'on' AND buero.temperature.temperature < '20'"
+        then:
+          - set: "buero.light.state = 'on'"
+        else:
+          - set: "buero.light.state = 'off'"
 
 buero.temperature.temperature:
   device_type: sensor
@@ -22,8 +23,9 @@ buero.temperature.temperature:
   history_depth: 10
   data_source:
     mqtt:
-        topic: test/temperature
-        key: temperature
+      topic: test/temperature
+      key: temperature
+  node_red_mqtt_link: true
 
 buero.temperature.humidity:
   device_type: sensor
@@ -31,8 +33,11 @@ buero.temperature.humidity:
   history_depth: 10
   data_source:
     mqtt:
-        topic: test/temperature
-        key: humidity
+      topic: test/temperature
+      key: humidity
+    conversion_type: none
+    conversion_str: ""
+  node_red_mqtt_link: true
 
 
 buero.light.state:
@@ -41,12 +46,13 @@ buero.light.state:
   history_depth: 10
   data_source:
     mqtt:
-        topic: test/light
-        key: state
+      topic: test/light
+      key: state
   data_sink:
     mqtt:
-        topic: test/light/set
-        key: state
+      topic: test/light/set
+      key: state
+  node_red_mqtt_link: true
 
 buero.light.brightness:
   device_type: actor
@@ -54,12 +60,13 @@ buero.light.brightness:
   history_depth: 10
   data_source:
     mqtt:
-        topic: test/light
-        key: brightness
+      topic: test/light
+      key: brightness
   data_sink:
     mqtt:
-        topic: test/light/set
-        key: brightness
+      topic: test/light/set
+      key: brightness
+  node_red_mqtt_link: true
 
 
 

@@ -34,6 +34,8 @@ class EntityCreationInfo:
     data_source: EntityDataSourceInfo   # the data source information
     data_sink: EntityDataSinkInfo       # the data sink information
 
+    node_red_mqtt_link: bool            # whether to link the entity to Node-RED via a MQTT topic (eg. purepyhome.node-link.<entity_id>.<write/read>)
+
     actions: dict
 
 
