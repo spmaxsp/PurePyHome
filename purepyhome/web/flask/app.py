@@ -110,27 +110,53 @@ def setup_entities(app):
                     entity_id=entity_id,
                     device_type=entity['device_type'],
                     data_type=entity['data_type'],
-                    history_depth=entity['history_depth'],
+                    history_depth=0,
                     data_sink=None,
                     data_source=None,
                     actions=None
                 )
 
-                if creation_info.device_type == 'actor':
-                    if 'data_sink' in entity:
-                        creation_info.data_sink = EntityDataSinkInfo(
-                            sink_type='mqtt',
-                            sink_info=entity['data_sink']['mqtt'],
-                            conversion_type="", #entity['data_sink']['conversion_type'],
-                            conversion_str="" #entity['data_sink']['conversion_str']
-                        )
+                if 'history_depth' in entity:
+                    creation_info.history_depth = entity['history_depth']
+                
+                if 'data_sink' in entity and len(entity['data_sink'].keys()) > 0:
+                    data_sink_type = entity['data_sink'].keys()[0]
+                    creation_info.data_sink = EntityDataSinkInfo(
+                        sink_type=data_sink_type,
+                        sink_info=entity['data_sink'][data_sink_type],
+                        conversion_type="",
+                        conversion_str=""
+                    )
+                    if 'conversion_type' in entity['data_sink'][data_sink_type]:
+                        creation_info.data_sink.conversion_type = entity['data_sink'][data_sink_type]['conversion_type']
+                    if 'conversion_str' in entity['data_sink'][data_sink_type]:
+                        creation_info.data_sink.conversion_str = entity['data_sink'][data_sink_type]['conversion_str']
+                else:
+                    creation_info.data_sink = EntityDataSinkInfo(
+                        sink_type='none',
+                        sink_info=None,
+                        conversion_type="",
+                        conversion_str=""
+                    )
 
-                if 'data_source' in entity:
+                if 'data_source' in entity and len(entity['data_source'].keys()) > 0:
+                    data_source_type = entity['data_source'].keys()[0]
                     creation_info.data_source = EntityDataSourceInfo(
-                        source_type='mqtt',
-                        source_info=entity['data_source']['mqtt'],
-                        conversion_type="", # entity['data_source']['conversion_type'],
-                        conversion_str="" #entity['data_source']['conversion_str']
+                        source_type=data_source_type,
+                        source_info=entity['data_source'][data_source_type],
+                        conversion_type="",
+                        conversion_str=""
+                    )
+                    if 'conversion_type' in entity['data_source'][data_source_type]:
+                        creation_info.data_source.conversion_type = entity['data_source'][data_source_type]['conversion_type']
+                    if 'conversion_str' in entity['data_source'][data_source_type]:
+                        creation_info.data_source.conversion_str = entity['data_source'][data_source_type]['conversion_str']
+                else:
+                    creation_info.data_source = EntityDataSourceInfo(
+                        source_type='none',
+                        source_info=None,
+                        conversion_type="",
+                        conversion_str=""
                     )
 
                 if 'actions' in entity:
