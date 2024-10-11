@@ -121,7 +121,7 @@ def setup_entities(app):
                     creation_info.history_depth = entity['history_depth']
                 
                 if 'data_sink' in entity and len(entity['data_sink'].keys()) > 0:
-                    data_sink_type = entity['data_sink'].keys()[0]
+                    data_sink_type = next(iter(entity['data_sink']))
                     creation_info.data_sink = EntityDataSinkInfo(
                         sink_type=data_sink_type,
                         sink_info=entity['data_sink'][data_sink_type],
@@ -141,7 +141,7 @@ def setup_entities(app):
                     )
 
                 if 'data_source' in entity and len(entity['data_source'].keys()) > 0:
-                    data_source_type = entity['data_source'].keys()[0]
+                    data_source_type = next(iter(entity['data_source']))
                     creation_info.data_source = EntityDataSourceInfo(
                         source_type=data_source_type,
                         source_info=entity['data_source'][data_source_type],
