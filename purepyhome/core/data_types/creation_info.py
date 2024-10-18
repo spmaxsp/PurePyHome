@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 ENTITY_DATA_TYPES = ["string", "numeric", "bool", "color", "time", "date", "trigger"]
 
-ENTITY_DEVICE_TYPES = ["sensor", "actuator", "virtual"]
+ENTITY_DEVICE_TYPES = ["sensor", "actor", "virtual"]
 
 ENTITY_DATA_SOURCE_TYPES = ["mqtt", "none"]
 
