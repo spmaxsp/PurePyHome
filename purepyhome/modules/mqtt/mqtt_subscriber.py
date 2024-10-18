@@ -51,20 +51,26 @@ class MqttSubscriber:
         """
 
         try:
-            entity_id = kwargs.get('entity_id')
-            entity_info = kwargs.get('entity')
+            new_entity = kwargs.get('new_entity')
+            if new_entity is None:
+                raise ValueError(f'Canot find parameter: new_entity')
+
         except Exception as e:
             logger.error(f'Error getting required parameters: {e}')
             return
         else:
+            if new_entity.data_source.source_type == "mqtt":
+                entity_id = new_entity.entity_id
+                source_info = new_entity.data_source.source_info
 
-                    if "topic" in entity_info["data_source"]["mqtt"]:
-                        topic = entity_info["data_source"]["mqtt"]["topic"]
-                        if "key" in entity_info["data_source"]["mqtt"]:
-                            key = entity_info["data_source"]["mqtt"]["key"]
-                        else:
-                            key = ""
-                        self.__register_entity(topic, key, entity_id)
+                if "topic" in source_info:
+                    topic = source_info["topic"]
+                    if "key" in source_info:
+                        key = source_info["key"]
+                    else:
+                        key = ""
+
+                self.__register_entity(topic, key, entity_id)
 
 
     def on_remove_entity(self, sender, **kwargs):

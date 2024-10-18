@@ -49,21 +49,26 @@ class MqttPublisher:
         """
 
         try:
-            entity_id = kwargs.get('entity_id')
-            entity_info = kwargs.get('entity')
+            new_entity = kwargs.get('new_entity')
+            if new_entity is None:
+                raise ValueError(f'Canot find parameter: new_entity')
+
         except Exception as e:
             logger.error(f'Error getting required parameters: {e}')
             return
         else:
-            if "data_sink" in entity_info:
-                if "mqtt" in entity_info["data_sink"]:
-                    if "topic" in entity_info["data_sink"]["mqtt"]:
-                        topic = entity_info["data_sink"]["mqtt"]["topic"]
-                        if "key" in entity_info["data_sink"]["mqtt"]:
-                            key = entity_info["data_sink"]["mqtt"]["key"]
-                        else:
-                            key = ""
-                        self.__register_entity(entity_id, topic, key)
+            if new_entity.data_sink.sink_type == "mqtt":
+                entity_id = new_entity.entity_id
+                sink_info = new_entity.data_sink.sink_info
+
+                if "topic" in sink_info:
+                    topic = sink_info["topic"]
+                    if "key" in sink_info:
+                        key = sink_info["key"]
+                    else:
+                        key = ""
+
+                    self.__register_entity(entity_id, topic, key)
 
 
     def on_remove_entity(self, sender, **kwargs):
