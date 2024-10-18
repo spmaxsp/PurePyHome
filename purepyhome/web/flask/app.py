@@ -114,7 +114,7 @@ def setup_entities(app):
                     data_sink=None,
                     data_source=None,
                     node_red_mqtt_link=False,
-                    actions=None
+                    actions={}
                 )
 
                 if 'history_depth' in entity:

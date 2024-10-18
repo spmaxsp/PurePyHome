@@ -41,6 +41,9 @@ class EntityCreationInfo:
 
 def check_entity_creation_info(entity_creation_info: EntityCreationInfo):
 
+    if entity_creation_info.entity_id is None or entity_creation_info.device_type is None or entity_creation_info.data_type is None or entity_creation_info.history_depth is None or entity_creation_info.data_source is None or entity_creation_info.data_sink is None or entity_creation_info.node_red_mqtt_link is None or entity_creation_info.actions is None:
+        raise ValueError(f'Invalid entity creation info: {entity_creation_info} Value cannot be None')
+
     if not isinstance(entity_creation_info.entity_id, str):
         raise ValueError(f'Invalid entity id: {entity_creation_info.entity_id}')
 

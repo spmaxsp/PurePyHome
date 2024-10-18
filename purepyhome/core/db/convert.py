@@ -41,15 +41,23 @@ def convert_from_db_str(value, type) -> any:
         raise ValueError(f'Type {type} not in {ENTITY_DATA_TYPES}')
     
     if type == 'string':
+        if value == None:
+            return ''
         return value
     
     elif type == 'numeric':
+        if value == None:
+            return 0.0
         return float(value)
     
     elif type == 'bool':
+        if value == None:
+            return False
         return True if value == "True" else False
     
     elif type == 'color':
+        if value == None:
+            return (0, 0, 0)
         return tuple(int(x) for x in value.split(','))
     
     elif type == 'time':
