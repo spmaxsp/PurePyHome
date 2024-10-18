@@ -1,3 +1,5 @@
+from .logger import get_logger
+
 from .data_types.creation_info import EntityCreationInfo, check_entity_creation_info
 
 from .signals.register_entity import _register_entity
@@ -5,6 +7,8 @@ from .signals.update_entity import _update_entity
 from .signals.remove_entity import _remove_entity
 from .db.entity_db import entity_db
 
+
+logger = get_logger()
 
 def create_entity(new_entity: EntityCreationInfo):
     """Creates an entity in the database and emits the register_entity signal
@@ -18,7 +22,7 @@ def create_entity(new_entity: EntityCreationInfo):
     try:
         check_entity_creation_info(new_entity)
     except ValueError as e:
-        #logger.error(f'Error: {e}')
+        logger.error(f'Error: {e}')
         return
 
     entity_db.create_entity(new_entity.entity_id, new_entity.data_type, new_entity.history_depth)
@@ -39,11 +43,20 @@ def update_entity(sender: str, entity_id: str, value, callstack: list):
         None
     """
 
+    # check for circular reference
     if sender in callstack:
         #logger.error(f'Error: Circular reference detected: {callstack}')
         return
 
-    current_value = entity_db.get_entity(entity_id)['value']
+    # get the entity from the database
+    entity = entity_db.get_entity(entity_id)
+
+    # check if the entity exists
+    if entity is None:
+        #logger.error(f'Error: Entity {entity_id} not found')
+        return
+
+    current_value = entity['value']
     entity_db.update_entity(entity_id, value)
     
     callstack.append(sender)
