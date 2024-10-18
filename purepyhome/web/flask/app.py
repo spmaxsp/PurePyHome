@@ -194,6 +194,8 @@ def init_app(debug=False):
 
     setup_entities(app)
 
+    entity_db.dbg_printout_db()
+
     setup_blueprints(app)
     
     return app
