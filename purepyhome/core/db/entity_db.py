@@ -85,9 +85,10 @@ class EntityDB:
         """
 
         with self.__current_app_context():
-            new_value = convert_to_db_str(new_value)
             entity = EntityData.query.filter_by(entity_id=entity_id).first()
             if entity:
+                entity_data_type = entity.data_type
+                new_value = convert_to_db_str(new_value, entity_data_type)
                 old_value = entity.value
                 old_timestamp = entity.timestamp
                 history_depth = entity.history_depth
@@ -201,12 +202,16 @@ class EntityDB:
         """
 
         with self.__current_app_context():
+            logger.info(f'=========    Printing out database contents    =========')
             entities = EntityData.query.all()
+            logger.info(f'Entities: {len(entities)}')
             for entity in entities:
-                logger.info(f'Entity: {entity.entity_id} {entity.data_type} {entity.value} {entity.timestamp} {entity.history_depth}')
+                logger.info(f'Entity: {entity.entity_id} ({entity.data_type}) = {entity.value} @{entity.timestamp} [depth:{entity.history_depth}]')
             histories = EntityHistoric.query.all()
+            logger.info(f'Histories: {len(histories)}')
             for history in histories:
-                logger.info(f'History: {history.entity_id} {history.value} {history.timestamp}')
+                logger.info(f'History: {history.entity_id} = {history.value} @{history.timestamp}')
+            logger.info(f'=========    End of database contents    =========')
 
 
 entity_db = EntityDB(db)

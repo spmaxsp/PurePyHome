@@ -1,4 +1,4 @@
-from .models import EntityData, EntityHistoric
+from .models import EntityData
 from purepyhome.core.data_types.creation_info import ENTITY_DATA_TYPES
 
 def convert_to_db_str(value, type) -> str:
@@ -12,6 +12,8 @@ def convert_to_db_str(value, type) -> str:
         raise ValueError(f'Value {value} not of type string')
     
     elif type == 'numeric':
+        if isinstance(value, (str)):
+            value = float(value)
         if isinstance(value, (float, int)):
             return str(float(value))
         raise ValueError(f'Value {value} not of type numeric')
