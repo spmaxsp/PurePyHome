@@ -43,18 +43,22 @@ class Actions:
         """
 
         try:
-            entity_id = kwargs.get('entity_id')
-            entity_info = kwargs.get('entity')
+            new_entity = kwargs.get('new_entity')
+            if new_entity is None:
+                raise ValueError(f'Canot find parameter: new_entity')
+
         except Exception as e:
             logger.error(f'Error getting required parameters: {e}')
             return
         else:
-            if "actions" in entity_info:
-                for action in entity_info["actions"]:
-                    if next(iter(action)) == "on_update":
-                        self.__register_action(entity_id, "on_update", action["on_update"])
-                    elif next(iter(action)) == "on_change":
-                        self.__register_action(entity_id, "on_change", action["on_change"])
+            entity_id = new_entity.entity_id
+            actions = new_entity.actions
+
+            for action in actions:
+                if next(iter(action)) == "on_update":
+                    self.__register_action(entity_id, "on_update", action["on_update"])
+                elif next(iter(action)) == "on_change":
+                    self.__register_action(entity_id, "on_change", action["on_change"])
 
 
     def on_remove_entity(self, sender, **kwargs):
