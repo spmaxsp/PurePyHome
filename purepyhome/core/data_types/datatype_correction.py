@@ -1,4 +1,4 @@
-from purepyhome.core.data_types import ENTITY_DATA_TYPES
+from purepyhome.core.data_types.creation_info import ENTITY_DATA_TYPES
 
 import colorsys
 import re
@@ -83,7 +83,7 @@ def color_str_to_rgb_tuple(color: str) -> tuple:
         raise ValueError(f'Color format {color} not recognized')
 
 
-def check_and_correct_datatype(value, type):
+def check_and_correct_value_type(value, type):
     """Checks if the value has the correct datatype and corrects it if needed and possible.
 
     Args:

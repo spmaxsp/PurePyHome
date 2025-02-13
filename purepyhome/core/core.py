@@ -2,7 +2,7 @@ from .logger import get_logger
 
 from .data_types.creation_info import EntityCreationInfo, check_entity_creation_info
 from .data_types.state_info import EntityStateInfo, EntityHistoryInfo
-from .data_types.value_conversion import check_and_correct_value_type
+from .data_types.datatype_correction import check_and_correct_value_type
 
 from .signals.register_entity import _register_entity
 from .signals.update_entity import _update_entity
