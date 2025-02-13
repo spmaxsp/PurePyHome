@@ -12,15 +12,15 @@ ENTITY_DATA_SINK_TYPES = ["mqtt", "none"]
 class EntityDataSourceInfo:
     source_type: str
     source_info: dict
-    conversion_type: str
-    conversion_str: str
+    converter_name: str
+    converter_info: dict
 
 @dataclass
 class EntityDataSinkInfo:
     sink_type: str
     sink_info: dict
-    conversion_type: str
-    conversion_str: str
+    converter_name: str
+    converter_info: dict
 
 
 @dataclass

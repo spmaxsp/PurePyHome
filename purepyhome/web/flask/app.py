@@ -125,19 +125,19 @@ def setup_entities(app):
                     creation_info.data_sink = EntityDataSinkInfo(
                         sink_type=data_sink_type,
                         sink_info=entity['data_sink'][data_sink_type],
-                        conversion_type="",
-                        conversion_str=""
+                        converter_name="none",
+                        converter_info={}
                     )
-                    if 'conversion_type' in entity['data_sink'][data_sink_type]:
-                        creation_info.data_sink.conversion_type = entity['data_sink'][data_sink_type]['conversion_type']
-                    if 'conversion_str' in entity['data_sink'][data_sink_type]:
-                        creation_info.data_sink.conversion_str = entity['data_sink'][data_sink_type]['conversion_str']
+                    if 'converter_name' in entity['data_sink'][data_sink_type]:
+                        creation_info.data_sink.converter_name = entity['data_sink'][data_sink_type]['converter_name']
+                    if 'converter_info' in entity['data_sink'][data_sink_type]:
+                        creation_info.data_sink.converter_info = entity['data_sink'][data_sink_type]['converter_info']
                 else:
                     creation_info.data_sink = EntityDataSinkInfo(
                         sink_type='none',
                         sink_info=None,
-                        conversion_type="",
-                        conversion_str=""
+                        converter_name="none",
+                        converter_info={}
                     )
 
                 if 'data_source' in entity and len(entity['data_source'].keys()) > 0:
@@ -145,19 +145,19 @@ def setup_entities(app):
                     creation_info.data_source = EntityDataSourceInfo(
                         source_type=data_source_type,
                         source_info=entity['data_source'][data_source_type],
-                        conversion_type="",
-                        conversion_str=""
+                        converter_name="",
+                        converter_info={}
                     )
-                    if 'conversion_type' in entity['data_source'][data_source_type]:
-                        creation_info.data_source.conversion_type = entity['data_source'][data_source_type]['conversion_type']
-                    if 'conversion_str' in entity['data_source'][data_source_type]:
-                        creation_info.data_source.conversion_str = entity['data_source'][data_source_type]['conversion_str']
+                    if 'converter_name' in entity['data_source'][data_source_type]:
+                        creation_info.data_source.converter_name = entity['data_source'][data_source_type]['converter_name']
+                    if 'converter_info' in entity['data_source'][data_source_type]:
+                        creation_info.data_source.converter_info = entity['data_source'][data_source_type]['converter_info']
                 else:
                     creation_info.data_source = EntityDataSourceInfo(
                         source_type='none',
                         source_info=None,
-                        conversion_type="",
-                        conversion_str=""
+                        converter_name="",
+                        converter_info={}
                     )
 
                 if 'node_red_mqtt_link' in entity:
