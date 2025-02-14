@@ -48,9 +48,11 @@ def update_entity(sender: str, entity_id: str, value, callstack: list) -> None:
         None
     """
 
+    logger.info(f'Updating entity {entity_id} with value {value}')
+
     # check for circular reference
     if sender in callstack:
-        #logger.error(f'Error: Circular reference detected: {callstack}')
+        logger.error(f'Error: Circular reference detected: {callstack}')
         return
 
     # get the entity from the database
@@ -58,7 +60,7 @@ def update_entity(sender: str, entity_id: str, value, callstack: list) -> None:
 
     # check if the entity exists
     if entity is None:
-        #logger.error(f'Error: Entity {entity_id} not found')
+        logger.error(f'Error: Entity {entity_id} not found')
         return
     
     # correct the value type if needed
