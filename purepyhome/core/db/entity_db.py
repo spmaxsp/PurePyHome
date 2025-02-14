@@ -1,8 +1,10 @@
 from purepyhome.core.logger import get_logger
 
+from purepyhome.core.data_types.state_info import EntityStateInfo, EntityHistoryInfo
+
 from .sqlalchemy import db
 from .models import EntityData, EntityHistoric
-from .convert import convert_to_db_str, db_entry_to_dict, db_entries_to_id_list, entry_hisory_to_dict
+from .convert import convert_to_db_str, db_entry_to_info, db_entries_to_id_list, db_entry_history_to_info
 
 from datetime import datetime
 from contextlib import contextmanager
@@ -55,7 +57,7 @@ class EntityDB:
             return
 
 
-    def create_entity(self, entity_id: str, data_type: str, history_depth: int):
+    def create_entity(self, entity_id: str, data_type: str, history_depth: int) -> None:
         """Create an entity in the database
         
         Args:
@@ -74,12 +76,12 @@ class EntityDB:
         logger.info(f'Created db entity {entity_id}')
 
 
-    def update_entity(self, entity_id: str, new_value: any):
+    def update_entity(self, entity_id: str, new_value: any) -> None:
         """Update an entity in the database
         
         Args:
             entity_id (str): The entity id
-            value (any): The new value of the entity
+            new_value (any): The new value of the entity
         Returns:
             None
         """
@@ -106,19 +108,19 @@ class EntityDB:
         logger.info(f'Updated db entity {entity_id} with value {new_value}')
 
 
-    def get_entity(self, entity_id):
+    def get_entity(self, entity_id) -> EntityStateInfo:
         """Get an entity from the database
             
         Args:
             entity_id (str): The entity id
         Returns:
-            Dict: dict of the entity containing the entity id, value, data type and timestamp
+            entity (EntityStateInfo): The info about the entities current state
         """
 
         with self.__current_app_context():
             entity = EntityData.query.filter_by(entity_id=entity_id).first()
             if entity:
-                return db_entry_to_dict(entity)
+                return db_entry_to_info(entity)
             else:
                 logger.error(f'Entity {entity_id} not found')
                 return None
@@ -130,7 +132,7 @@ class EntityDB:
         Args:
             None
         Returns:
-            List: list of all entity ids
+            entity_ids (list): list of all entity ids
         """
 
         with self.__current_app_context():
@@ -138,13 +140,13 @@ class EntityDB:
             return db_entries_to_id_list(entities)
 
 
-    def get_all_entity_history(self, entity_id: str):
+    def get_all_entity_history(self, entity_id: str) -> EntityHistoryInfo:
         """Get all entities from the database
 
         Args:
-            None
+            entity_id (str): The entity id
         Returns:
-            Dict: dict of all entities
+            history (EntityHistoryInfo): The entity history info
         """
 
         with self.__current_app_context():
@@ -152,7 +154,7 @@ class EntityDB:
             entries =  EntityHistoric.query.filter_by(entity_id=entity_id).order_by(EntityHistoric.timestamp.desc()).all()
             
             if entry_info and entries:
-                return entry_hisory_to_dict(entries, entry_info)
+                return db_entry_history_to_info(entries, entry_info)
             else:
                 logger.error(f'Entity {entity_id} not found')
                 return None

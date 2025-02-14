@@ -1,4 +1,5 @@
 from .models import EntityData
+from purepyhome.core.data_types.state_info import EntityStateInfo, EntityHistoryInfo
 from purepyhome.core.data_types.creation_info import ENTITY_DATA_TYPES
 
 def convert_to_db_str(value, type) -> str:
@@ -88,7 +89,7 @@ def db_entries_to_id_list(entries: list) -> list:
     return res
 
 
-def entry_hisory_to_dict(entries: list, entry_info: EntityData) -> dict:
+def db_entry_history_to_dict(entries: list, entry_info: EntityData) -> dict:
     res = {}
     res['entity_id']  = entry_info.entity_id 
     res['values']      = []
@@ -98,5 +99,29 @@ def entry_hisory_to_dict(entries: list, entry_info: EntityData) -> dict:
         res['values'].append({'value': convert_from_db_str(entry.value, entry_info.data_type),
                               'timestamp': entry.timestamp
                               })
+        
+    return res
+
+def db_entry_to_info(entry: EntityData) -> EntityStateInfo:
+    res = EntityStateInfo(entity_id=entry.entity_id,
+                         data_type=entry.data_type,
+                         current_value=convert_from_db_str(entry.value, entry.data_type),
+                         last_value=convert_from_db_str(entry.last_value, entry.data_type),
+                         timestamp=entry.timestamp
+                         )
+    
+    return res
+
+def db_entry_history_to_info(entries: list, entry_info: EntityData) -> EntityHistoryInfo:
+    res = EntityHistoryInfo(entity_id=entry_info.entity_id,
+                            data_type=entry_info.data_type,
+                            history=[],
+                            history_depth=entry_info.history_depth
+                            )
+    
+    for entry in entries:
+        res.history.append({'value': convert_from_db_str(entry.value, entry_info.data_type),
+                            'timestamp': entry.timestamp
+                            })
         
     return res
