@@ -1,5 +1,5 @@
 from purepyhome.core.mqtt import mqtt
-from purepyhome.core.data_types.creation_info import EntityCreationInfo
+from purepyhome.core.value_converters.value_conversers import run_value_converter
 from purepyhome.core.signals.register_entity import connect_to_register_entity
 from purepyhome.core.signals.remove_entity import connect_to_remove_entity
 from purepyhome.core.core import update_entity
@@ -37,6 +37,7 @@ class MqttSubscriber:
         connect_to_remove_entity(self.on_remove_entity)
 
         mqtt.on_message()(self.on_mqtt_message)
+        mqtt.on_connect()(self.on_mqtt_connect)
 
 
     def on_register_entity(self, sender, **kwargs):
@@ -65,12 +66,16 @@ class MqttSubscriber:
 
                 if "topic" in source_info:
                     topic = source_info["topic"]
+
                     if "key" in source_info:
                         key = source_info["key"]
                     else:
                         key = ""
 
-                self.__register_entity(topic, key, entity_id)
+                    converter_name = new_entity.data_sink.converter_name
+                    converter_info = new_entity.data_sink.converter_info
+
+                    self.__register_entity(topic, key, entity_id, converter_name, converter_info)
 
 
     def on_remove_entity(self, sender, **kwargs):
@@ -101,6 +106,21 @@ class MqttSubscriber:
                             key = ""
                         self.__unregister_entity(entity_id)
 
+    def on_mqtt_connect(self, client, userdata, flags, rc):
+        """Handler for MQTT connection
+            this function subscribes to all topics
+
+        Args:
+            client: The client
+            userdata: The userdata
+            flags: The flags
+            rc: The rc
+        Returns:
+            None
+        """
+        
+        self.__update_subscriptions()
+
 
     def on_mqtt_message(self, client, userdata, message):
         """Handler for incomming MQTT messages
@@ -114,14 +134,10 @@ class MqttSubscriber:
             None
         """
 
-        try:
+        if message.payload is not None:
             data = message.payload.decode()
-            data = json.loads(data)
             topic = message.topic
-        except:
-            logger.error(f'Could not parse message payload to json')
-            return
-        else:
+
             logger.info(f'Received message on topic {topic} with data {data}')
             self.__handle_mqtt_message(topic, data)
 
@@ -137,15 +153,34 @@ class MqttSubscriber:
             None
         """
 
+        logger.debug(f'Map entry for topic {topic}: {self.map[topic]}')
+
         for key in self.map[topic]:
-            value = get_nested_value(data, key)
+
+            if key != "":
+                try:
+                    data_ext = json.loads(data)
+                except:
+                    logger.error(f'Could not parse message payload to json')
+                    return
+                value = get_nested_value(data_ext, key)
+                logger.debug(f'Extracted value {value} from key {key}')
+            else:
+                value = data
+
             if value is not None:
                 for entity in self.map[topic][key]:
-                    logger.info(f'Updating entity {entity} with value {value}')
-                    update_entity(__name__, entity_id=entity, value=value, callstack=[])
+                    entity_id = entity["entity_id"]
+                    converter_name = entity["converter_name"]
+                    converter_info = entity["converter_info"]
+
+                    out_value = run_value_converter(data, converter_name, converter_info, False)
+
+                    logger.info(f'Updating entity {entity_id} with value {out_value}')
+                    update_entity(__name__, entity_id=entity_id, value=out_value, callstack=[])
 
 
-    def __register_entity(self, topic, key, entity_id):
+    def __register_entity(self, topic, key, entity_id, converter_name, converter_info):
         """Registers an entity to a topic
             this function registers the entity to the topic and key in the map and subscribes to the topic
 
@@ -153,6 +188,8 @@ class MqttSubscriber:
             topic: The topic
             key: The key
             entity_id: The entity_id
+            converter_name: The name of the data converter
+            converter_info: Additional info for the data converter
         Returns:
             None
         """
@@ -161,10 +198,28 @@ class MqttSubscriber:
             self.map[topic] = {}
         if key not in self.map[topic]:    # if the key is not in the map, add it
             self.map[topic][key] = []
-        self.map[topic][key].append(entity_id)  # add the entity to the map
+        self.map[topic][key].append({"entity_id": entity_id, "converter_name": converter_name, "converter_info": converter_info})
 
-        logger.info(f'Subscribing to topic {topic}')
-        mqtt.subscribe(topic)
+        logger.info(f'Mapped topic {topic} with key {key} to entity {entity_id} (using converter {converter_name})')
+        
+        logger.info(f'Subscribing to topic {topic} ...')
+        mqtt.subscribe(topic)  
+
+    def __update_subscriptions(self):
+        """Updates the subscriptions
+            this function unsubscribes from all topics and subscribes again to all topics in the map
+
+        Args:
+            None
+        Returns:
+            None
+        """
+
+        logger.info(f'Updating all MQTT subscriptions ...')
+        mqtt.unsubscribe_all()
+        for topic in self.map:
+            mqtt.subscribe(topic)
+            logger.info(f'Subscribed to topic {topic}')
 
 
     def __unregister_entity(self, entity_id):
