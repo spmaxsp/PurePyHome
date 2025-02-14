@@ -68,7 +68,7 @@ def update_entity(sender: str, entity_id: str, value, callstack: list) -> None:
         logger.error(f'Error: {e}')
         return
 
-    current_value = entity.value
+    current_value = entity.current_value
     entity_db.update_entity(entity_id, corr_value)
     
     callstack.append(sender)
